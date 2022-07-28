@@ -2,54 +2,66 @@
 Collection of functions and classes that may be useful in other scripts.
 
     - Functions:
-        - `Print()`:  Prints a list of all functions and classes in this module.
-        - `clear()`:  Clears the terminal screen.
-        - `printn()`:  Prints newline(s).
-        - `println()`:  Prints a newline following the object passed. Shortcut for `print(obj, end='\\n')`.
-        - `printdashes()`:  Prints a line of dashes with specified length.
-        - `any_match()`:  Checks a string for any matches defined by a set of conditions.
-        - `delay()`:  Much better alternative to `time.sleep()`.
-        - `sort()`:  Sorts a string, tuple, list, or dictionary.
-        - `reverse()`:  Reverses the order of a string, tuple, range, or list.
-        - `view()`:  Uses the `pyjsonviewer` module to view a dictionary or JSON object.
-        - `View()`:  Uses the `traitsui` module to view a dictionary or JSON object,  better version of `view()`.
-        - `fmt()`:  Formats a number with (optional)commas and specified float precision.
-        - `exctract_digits()`:  Extracts digits from a string.
-        - `weighted_average()`:  Calculates the weighted average of a list of numbers and weights.
-        - `print_matrix()`:  Prints a given matrix in a nice format.
-        - `print_array()`:  Prints an array in a nice format.
-        - `perf()`:  Prints the performance of a given function (execution time, peak memory use).
-        - `wolfram()`:  Returns Wolfram Alpha's response/result of a given query.
-        - `char2key()`:  Converts a character to a virtual-key-code.
-        - `string2keys()`:  Converts a string to a list of virtual-key-codes.
-        - `show_processes()`:  Prints all processes currently running.
-        - `kill_process()`:  Kills the process with the given name, if it exists.
-        - `get_window()`:  Returns `WindowManager` objects of the given windows, for accessing the `WindowManager` class methods.
-    \n⁣
+        - `PrintThis`:  Prints a list of all functions and classes in this module.
+        - `clear`:  Clears the terminal screen.
+        - `println`:  Prints a newline following the object passed. Shortcut for `print(obj, end='\\n')`.
+        - `perf`:  Prints the performance of a given function (execution time, peak memory use).
+        - `delay`:  Much better alternative to `time.sleep()`.
+        - `printdashes`:  Prints a line of dashes with specified length.
+        - `dash`:  Returns a string with the specified number of dashes.
+        - `any_match`:  Checks a string for any matches defined by a set of conditions.
+        - `convert_to_local_time`:  Converts a datetime object to a new one in the local timezone.
+        - `sort`:  Sorts a string, tuple, list, or dictionary.
+        - `reverse`:  Reverses the order of a string, tuple, range, or list.
+        - `view`:  Uses the `pyjsonviewer` module to view a dictionary or JSON object.
+        - `fmt`:  Formats a number with (optional)commas and specified float precision.
+        - `exctract_digits`:  Extracts digits from a string.
+        - `weighted_average`:  Calculates the weighted average of a list of numbers and weights.
+        - `print_matrix`:  Prints a given matrix in a nice format.
+        - `print_array`:  Prints an array in a nice format.
+        - `wolfram`:  Returns Wolfram Alpha's response/result of a given query.
+        - `char2key`:  Converts a character to a virtual-key-code.
+        - `string2keys`:  Converts a string to a list of virtual-key-codes.
+        - `kill_process`:  Kills a Windows process with the given name, if it exists.
+        - `show_processes`:  Prints all processes currently running on the PC.
+        - `get_window`:  Returns `WindowManager` objects of the given windows, for accessing the `WindowManager` class methods.
+        - `intermediate_points`:  Returns a list of intermediate points between start and end, via Bresenham's line algorithm.
+        - `dict_to_struct`:  Converts a Python dictionary to the format of a C++ struct.
+        - `scrape_wikipedia_table`:  Scrapes a wikipedia table from a given URL using the BeautifulSoup library.
+
     - Classes:
+        - `Animate`:  A class that animates a given function in two dimensions (x,y).
         - `Plot`:  A `pyplot` wrapper class for plotting data easily.
         - `Plot3D`:  A `mpl_toolkits.mplot3d` wrapper class for plotting data in three dimensions.
-        - `Point2D`:  A class for 2D points and vectors.
+        - `Point`:  A class for representing points and vectors in 2D space.
         - `System`:  A class for interacting with the Windows OS.
         - `Web3`:  A wrapper for the `web3` module.
         - `File`:  A class to handle files and the manipulation of them, including PDFs.
-        - `Regex`:  A class for simplifying the matching of strings against regular expressions.
         - `Window`:  A class for managing application/program windows.
         - `Keyboard`:  A class for interfacing with keyboard library.
         - `Screen`:  A class for getting various information from the screen.
         - `Math`:  A class containing several math functions.
-            - `integrate()`:  Integrates a function from `a` to `b` using the composite trapezoidal rule.
-            - `differentiate()`:  Calculates the derivative of a function at a point `x` using the central difference method.
+        - `SolarIrradiance`:  A class for getting current solar irradiance data.
         - `Git`:  A class containing several Git functions.
-            - `Git.heroku()`:  Pushes the current directory to Heroku.
+        - `Regex`:  A class for simplifying the matching of strings against regular expressions.
 """
-# non-breaking whitespace character used to further separate docstring destriptions following the colon   --->  ' '  (copy the space between the ' ') (search NBSP in the insert unicode command)
-# invisible separator character used to add spacing between -Functions: and -Classes: (following the \n)  --->  '⁣'  (copy between the ' ') (search invisible in the insert unicode command)
 
 
 
 
-
+def PrintThis():
+    """
+    Prints a list of all functions and classes in this module, with their docstrings.
+    """
+    clear()
+    functions = [f for f in globals().values() if callable(f) and f.__name__ != 'Print']          # Get all functions in this module excluding this one.
+    for f in functions:
+        print('\n'+'-'*(len(max(f.__doc__.split('\n'), key=len))))
+        print('\n'+'{}()'.format(f.__name__))                                       # prints the function name
+        print(f.__doc__)                                                            # prints the function's docstring
+        print('-'*(len(max(f.__doc__.split('\n'), key=len))))
+        if f == functions[-1]:  print('\n\n')
+        else:  print('\n',end='')
 
 
 def clear(newlines=2):
@@ -63,15 +75,7 @@ def clear(newlines=2):
     os.system('cls' if os.name == 'nt' else 'clear')
     for i in range(newlines): print()
 
-def printn(newlines=2, obj=None):
-    """
-    Prints newline(s).
-
-    Args:
-        `newlines` (int):  The number of newlines to print. Default is `2`.
-    """
-    for i in range(newlines): print()
-
+        
 def println(obj):
     """
     Prints a newline following the object passed. Shortcut for `print(obj, end='\\n\\n')`.
@@ -81,54 +85,44 @@ def println(obj):
     """
     print(obj, end='\n\n')
 
-def printdashes(length=50, char='-', endtype='\n'):
-    """
-    Prints a line of dashes with specified length.
-
-    Args:
-        `length` (int):  The length of the line.  Default is 50.
-        `char` (str):  The character to print.  Default is  `-`.
-        `endtype` (str):  The type of end character to print.  Default is  `\\n`.
-    """
-    print(char*length, end=endtype)
-
-def dash(length):
-    """
-    Returns a line of dashes with specified length.
-
-    Args:
-        `length` (int):  The length of the line.
     
-    Returns:
-        `str` (str):  The line of dashes.
+def perf(func):
     """
-    return '-'*length
+    Function wrapper that measures performance of a function.
 
-
-def any_match(match_conditions, string, case_sensitive=False):
+    - Returns execution time in seconds,
+    - memory usage in megabytes,
+    - and peak memory usage in megabytes
     """
-    Checks a string for any matches defined by a set of conditions.
+    import tracemalloc
+    from functools import wraps
+    from time import perf_counter
 
-    Args:
-        `match_conditions` (list or tuple, str):  The set of conditions that should evaluate as `True`.
-        `string` (str):  The string to check for the existence of these conditions.
-        `case_sensitive` (bool):  Whether or not to consider case-sensitive matches only.  Default is `False`.
-
-    Returns:
-        `bool` (bool):  `True` if any of the conditions are in the given string.
-    
-    Examples:
-        >>> any_match(['a', 'b', 'c'], 'abc')
-        True
-        >>> any_match(("rooted", "snared"), 'You are rooted!')
-        True
-        >>> any_match(("rooted", "snared"), 'You are Snared!')
-        True if not case_sensitive, else False
-    """
-    if not case_sensitive:
-        string = string.lower()
-        match_conditions = [condition.lower() for condition in match_conditions]
-    return True if any(condition in string for condition in match_conditions) else False
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        tracemalloc.start()
+        start_time = perf_counter()
+        func_return = func(*args, **kwargs)
+        current_memory, peak_memory = tracemalloc.get_traced_memory()
+        if peak_memory/10**6 < 0.001:
+            mem_unit = 'self._keyboard'
+            peak_memory = peak_memory/10**3
+        else:
+            mem_unit = 'MB'
+            peak_memory = peak_memory/10**6
+        finish_time = perf_counter()
+        execution_time = finish_time - start_time
+        if execution_time < 0.001:
+            time_unit = 'ms'
+            execution_time = execution_time*1000
+        else: time_unit = 's'
+        print(f"\n\nFunction: {func.__name__}")
+        print(f"Time elapsed:\t\t {execution_time:.6f} {time_unit}")
+        print(f"Peak memory usage:\t {peak_memory:.6f} {mem_unit}")
+        print('-'*38+'\n')
+        tracemalloc.stop()
+        return func_return
+    return wrapper
 
 
 def delay(duration):
@@ -167,6 +161,57 @@ def delay(duration):
     start = perf_counter()
     while perf_counter() - start < duration:
         pass
+    
+    
+def printdashes(length=50, char='-', endtype='\n'):
+    """
+    Prints a line of dashes with specified length.
+
+    Args:
+        `length` (int):  The length of the line.  Default is 50.
+        `char` (str):  The character to print.  Default is  `-`.
+        `endtype` (str):  The type of end character to print.  Default is  `\\n`.
+    """
+    print(char*length, end=endtype)
+
+    
+def dash(length):
+    """
+    Returns a line of dashes with specified length.
+
+    Args:
+        `length` (int):  The length of the line.
+    
+    Returns:
+        `str` (str):  The line of dashes.
+    """
+    return '-'*length
+
+
+def any_match(match_conditions, string, case_sensitive=False):
+    """
+    Checks a string for any matches defined by a set of conditions.
+
+    Args:
+        `match_conditions` (list or tuple, str):  The set of conditions that should evaluate as `True`.
+        `string` (str):  The string to check for the existence of these conditions.
+        `case_sensitive` (bool):  Whether or not to consider case-sensitive matches only.  Default is `False`.
+
+    Returns:
+        `bool` (bool):  `True` if any of the conditions are in the given string.
+    
+    Examples:
+        >>> any_match(['a', 'b', 'c'], 'abc')
+        True
+        >>> any_match(("rooted", "snared"), 'You are rooted!')
+        True
+        >>> any_match(("rooted", "snared"), 'You are Snared!')
+        True if not case_sensitive, else False
+    """
+    if not case_sensitive:
+        string = string.lower()
+        match_conditions = [condition.lower() for condition in match_conditions]
+    return True if any(condition in string for condition in match_conditions) else False
 
 
 def convert_to_local_time(datetime_obj, fmt=None):
@@ -216,7 +261,6 @@ def sort(obj, ascending=True, key=None, index_list=False):
             return sorted(obj, key=key, reverse=not ascending)
     
 
-
 def reverse(obj):
     """
     Reverses the order of a string, tuple, range, or list.
@@ -228,23 +272,6 @@ def reverse(obj):
         `list` (list):  The reversed order.
     """
     return list(reversed(obj))
-
-
-
-def Print():
-    """
-    Prints a list of all functions and classes in this module, with their docstrings.
-    """
-    clear()
-    functions = [f for f in globals().values() if callable(f) and f.__name__ != 'Print']          # Get all functions in this module excluding this one.
-    for f in functions:
-        print('\n'+'-'*(len(max(f.__doc__.split('\n'), key=len))))                  # prints a line of dashes that is the length of the longest line in the docstring
-        print('\n'+'{}()'.format(f.__name__))                                       # prints the function name
-        print(f.__doc__)                                                            # prints the function's docstring
-        print('-'*(len(max(f.__doc__.split('\n'), key=len))))                       # prints a line of dashes that is the length of the longest line in the docstring
-        if f == functions[-1]:  print('\n\n')                                       # prints a double newline if this is the last function in the list
-        else:  print('\n',end='')                                                   # prints a single newline if this is not the last function in the list
-
 
 
 def view(jsonobj):
@@ -259,7 +286,6 @@ def view(jsonobj):
     """
     from pyjsonviewer import view_data
     view_data(json_data=jsonobj)
-
 
 
 def fmt(num, precision=2, commas=True, _return=False):
@@ -339,7 +365,6 @@ def print_matrix(mat, precision=2, commas=True):
     print('\n'.join(['      '.join([fmt(x,precision,commas,_return=True).rjust(w) for x,w in zip(row,widths)]) for row in mat]))
 
 
-
 def print_array(arr, precision=2, commas=True):
     """
     Prints an array in a nice format.
@@ -356,47 +381,6 @@ def print_array(arr, precision=2, commas=True):
     print('    '.join([fmt(x,precision,commas,_return=True) for x in arr]))
 
 
-
-def perf(func):
-    """
-    Function wrapper that measures performance of a function.
-
-    - Returns execution time in seconds,
-    - memory usage in megabytes,
-    - and peak memory usage in megabytes
-    """
-    import tracemalloc
-    from functools import wraps
-    from time import perf_counter
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        tracemalloc.start()
-        start_time = perf_counter()
-        func_return = func(*args, **kwargs)
-        current_memory, peak_memory = tracemalloc.get_traced_memory()
-        if peak_memory/10**6 < 0.001:
-            mem_unit = 'self._keyboard'
-            peak_memory = peak_memory/10**3
-        else:
-            mem_unit = 'MB'
-            peak_memory = peak_memory/10**6
-        finish_time = perf_counter()
-        execution_time = finish_time - start_time
-        if execution_time < 0.001:
-            time_unit = 'ms'
-            execution_time = execution_time*1000
-        else: time_unit = 's'
-        print(f"\n\nFunction: {func.__name__}")
-        print(f"Time elapsed:\t\t {execution_time:.6f} {time_unit}")
-        print(f"Peak memory usage:\t {peak_memory:.6f} {mem_unit}")
-        print('-'*38+'\n')
-        tracemalloc.stop()
-        return func_return
-    return wrapper
-
-
-
 def wolfram(query, only_result=True, only_print=False):
     """
     Queries Wolfram Alpha with a query string.
@@ -410,9 +394,8 @@ def wolfram(query, only_result=True, only_print=False):
     Returns:
         `result` (str):  The result of the query.
     """
-    # API reference PDF:  https://gateway.pinata.cloud/ipfs/QmXdqYcdEjivshiwptnvVdRzL9NJNb7KKVYW1cfD5xt5Kr
     import wolframalpha
-    APP_ID = 'RH9RUW-TQXKU2EUKX'
+    APP_ID = 'xxxxx'
     client = wolframalpha.Client(APP_ID)
     if only_result:
         result = client.query(query)
@@ -443,13 +426,13 @@ def char2key(c):
     Returns:
         `vk_key`:  The virtual-key-code.
     """
-    # https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
     from ctypes import windll
     result = windll.User32.VkKeyScanW(ord(c))
     shift_state = (result & 0xFF00) >> 8
     vk_key = result & 0xFF
     print(f"{c} -> {vk_key}")
     return vk_key
+
 
 def string2keys(string):
     """
@@ -462,7 +445,6 @@ def string2keys(string):
         A list of virtual-keys-codes.
     """
     return [char2key(c) for c in string]
-
 
 
 def kill_process(name):
@@ -484,13 +466,13 @@ def kill_process(name):
             # except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess): pass
             except: print(f"\n> Process \"{name}\" either couldn't be killed or was not found.\n")
 
+                
 def show_processes():
     """
     Prints all processes currently running.
     """
     import os
     for line in os.popen('tasklist').read().splitlines(): print(line)
-
 
 
 def get_window(window_name):
@@ -506,8 +488,6 @@ def get_window(window_name):
     window = Window()
     window.find_window_wildcard(f".*{window_name}.*")
     return window
-
-
 
 
 def intermediate_points(start, end):
@@ -549,8 +529,6 @@ def intermediate_points(start, end):
             y += sy
     points_in_line.append((x,y))
     return points_in_line
-
-
 
 
 def dict_to_struct(dictionary, struct_name):
@@ -602,8 +580,6 @@ def dict_to_struct(dictionary, struct_name):
     print("\n".join(statements))
     print('};')
     print("\n--------------------\n")
-
-
 
 
 def scrape_wikipedia_table(url,table_headings,columns_to_keep,txt_file=False):
@@ -1230,233 +1206,9 @@ class Point:
         return self._x * other.x + self._y * other.y
 
 
-
-
-class Point2D:
-    """
-    Describes cartesian and polar coordinates for 2D points.
-
-    Point2D is a class used to simutaneously describe the behaviour of points 
-    (vectors) in a 2D space with cartesian and polar coordinates. Changing one
-    coordinate will change the value of the others, i.e., when changing a
-    cartesian coordinate, the polar coordinates will be recalculated, and
-    vice-versa.
-    No methods need to be called to recalculate any of the coordinates, this is
-    done automatically, e.g., if you set a new `x`, `r` and `a` will be
-    updated.
-    """
-    # https://github.com/SplinterDev/point2d/
-    def __init__(self, x=None, y=None, r=None, a=None):
-        """Create Point2D from cartesian or polar (cartesian is default).
-
-        All arguments are optional keyword arguments, but there are some rules.
-        There are five ways to create a Point2D:
-        1. Don't provide any args: will create the point (0, 0)
-        2. Provide x and y: will create the cartesian point (x, y). If x is a
-        number, y must be provided.
-        3. Provide a tuple containing x and y: will create the cartesian point
-        (x, y).
-        4. Provide r and a: will create the polar point (r, a). If r is
-        provided, a must be too.
-        5. Provide another Point2D: Creates a copy of the point provided.
-
-        Args:
-            x (float or tuple or Point2D, optional): When `x` is a float,
-                cartesian behavior is assumed and `y` should be supplied. If
-                `x` is a tuple, the tuple must contain x and y. If `x` is a
-                Point2D, a copy of that Point2D will be created.
-            y (float, optional): y coordinate of cartesian pair.
-            r (float, optional): radius of polar coordinates.
-            a (float, optional): angle of polar coordinates (in radians).
-
-        Examples:
-            >>> Point2D()
-            Point2D(0.0, 0.0)(0.0, 0.0)
-
-            >>> Point2D(-1, 0)
-            Point2D(-1, 0)(1.0, 3.141592653589793)
-
-            >>> Point2D((-1.0, 0.0))
-            Point2D(-1.0, 0.0)(1.0, 3.141592653589793)
-
-            >>> Point2D(r=1.0, a=math.pi)
-            Point2D(-1.0, 1.2246467991473532e-16)(1.0, 3.141592653589793)
-
-            >>> Point2D(Point2D(10,10))
-            Point2D(10, 10)(14.142135623730951, 0.7853981633974483)
-        """
-        from math import sin, cos
-        from math import sqrt, atan2
-        self._x = 0.0
-        self._y = 0.0
-        self._r = 0.0
-        self._a = 0.0
-        if type(x) == Point2D:
-            # copying another point
-            self._x = x.x
-            self._y = x.y
-            self._r = x.r
-            self._a = x.a
-        elif type(x) == tuple:
-            # creating from x and y as tuple
-            self._x = x[0]
-            self._y = x[1]
-            self._r = sqrt(x[0]**2 + x[1]**2)
-            self._a = atan2(x[1], x[0])
-        elif not x == None and not y == None:
-            # creating from x and y
-            self._x = x
-            self._y = y
-            self._r = sqrt(x**2 + y**2)
-            self._a = atan2(y, x)
-        elif not r == None and not a == None:
-            # creating from r and a
-            self._r = r
-            self._a = a
-            self._x = r * cos(a)
-            self._y = r * sin(a)
-
-    def _calc_cartesian(self):
-        from math import sin, cos
-        self._x = self._r * cos(self._a)
-        self._y = self._r * sin(self._a)
-
-    def _calc_polar(self):
-        from math import sqrt, atan2
-        self._r = sqrt(self._x**2 + self._y**2)
-        self._a = atan2(self._y, self._x)
-
-    def cartesian(self, x=None, y=None):
-        """Return or set cartesian coordinates.
-
-        If no argument is provided, this method will return a tuple with
-        (x, y).
-        If `x` is a number, `y` must be provided. The cartesian coordinates
-        will be set to `x` and `y` and the polar coordinates recalculated 
-        accordingly.
-        If `x` is a tuple it must contain the new values of x and y.
-        """
-        if not x:
-            # act as getter
-            return (self._x, self._y)
-        elif type(x) == tuple:
-            self._x = float(x[0])
-            self._y = float(x[1])
-            self._calc_polar()
-        elif not x == None and not y == None:
-            self._x = float(x)
-            self._y = float(y)
-            self._calc_polar()
-
-    def polar(self, r=None, a=None):
-        """Return or set polar coordinates.
-
-        If no argument is provided, this method will return a tuple with
-        (r, a).
-        If `r` is a number, `a` must be provided. The polar coordinates will be
-        set to `r` and `a` and the cartesian coordinates recalculated
-        accordingly.
-        If `r` is a tuple it must contain the new values of r and a.
-        """
-        if not r:
-            # act as getter
-            return (self._r, self._a)
-        elif type(r) == tuple:
-            self._r = float(r[0])
-            self._a = float(r[1])
-            self._calc_cartesian()
-        elif not r == None and not a == None:
-            self._r = float(r)
-            self._a = float(a)
-            self._calc_cartesian()
-
-    def ints(self):
-        """Return the cartesian coordinates as a tuple of ints."""
-        return (int(self._x), int(self._y))
-
-    @property
-    def x(self):
-        """x coordinate of cartesian pair."""
-        return self._x
-
-    @x.setter
-    def x(self, val):
-        self._x = float(val)
-        self._calc_polar()
     
-    @property
-    def y(self):
-        """y coordinate of cartesian pair."""
-        return self._y
-
-    @y.setter
-    def y(self, val):
-        self._y = float(val)
-        self._calc_polar()
     
-    @property
-    def r(self):
-        """Radius value of polar coordinates."""
-        return self._r
-
-    @r.setter
-    def r(self, val):
-        self._r = float(val)
-        self._calc_cartesian()
     
-    @property
-    def a(self):
-        """Angle value of polar coordinates."""
-        return self._a
-
-    @a.setter
-    def a(self, val):
-        self._a = float(val)
-        self._calc_cartesian()
-
-    def __repr__(self):
-        """Return a string with the format 'Point2D(x, y)(r, a)'"""
-        return "Point2D({}, {})({}, {})".format(self._x,self._y,self._r,self._a)
-
-    def __add__(self, other):
-        """Vector addition."""
-        return Point2D(self._x + other.x, self._y + other.y)
-
-    def __iadd__(self, other):
-        """Vector addition."""
-        self._x += other.x
-        self._y += other.y
-        self._calc_polar()
-        return self
-
-    def __sub__(self, other):
-        """Vector subtraction."""
-        return Point2D(self._x - other.x, self._y - other.y)
-
-    def __isub__(self, other):
-        """Vector subtraction."""
-        self._x -= other.x
-        self._y -= other.y
-        self._calc_polar()
-        return self
-
-    def __mul__(self, val):
-        """Scalar multiplication."""
-        return Point2D(r=self.r*val, a=self.a)
-
-    def __rmul__(self, val):
-        """Scalar multiplication."""
-        return Point2D(r=self.r*val, a=self.a)
-
-    def __imul__(self, val):
-        """Scalar multiplication."""
-        self.r *= val
-        return self
-
-
-
-
-
 class System:
     """
     A class for interacting with the Windows OS.
@@ -1710,11 +1462,11 @@ class Web3:
         from urllib.request import urlopen
 
         if provider is None:
-            provider = 'https://polygon-mainnet.infura.io/v3/6b74ec89f0d44859a5b3bdb87aa81c8c'
-            self.ABI_url = 'https://api.polygonscan.com/api?module=contract&action=getabi&address='+contract_address+'&apikey=5KB437XJ6H6F6YJ72BBWRSMV3TG8Y8DXJI'
+            provider = 'https://polygon-mainnet.infura.io/v3/'
+            self.ABI_url = 'https://api.polygonscan.com/api?module=contract&action=getabi&address='+contract_address+'&apikey='
         elif provider == "Ethereum":
-            provider = 'https://mainnet.infura.io/v3/8456a4a48e2b47759e934831921d4c72'
-            self.ABI_url = 'https://api.etherscan.io/api?module=contract&action=getabi&address='+contract_address+'&apikey=XEYXTBZBM31QE16RNH8FZB1QDM5BEDT3A1'
+            provider = 'https://mainnet.infura.io/v3/'
+            self.ABI_url = 'https://api.etherscan.io/api?module=contract&action=getabi&address='+contract_address+'&apikey='
         
         self.w3 = web3.Web3(web3.Web3.HTTPProvider(provider))
         with urlopen(self.ABI_url) as response: resp = json.dumps(json.loads(response.read().decode('utf-8'))['result'])
@@ -1970,7 +1722,6 @@ class Window:
 
     Printing an object of this class will print the window's title (the window corresponding to the object).
     """
-    # https://mhammond.github.io/pywin32/modules.html
     def __init__ (self):
         """
         Constructor.
@@ -2328,7 +2079,6 @@ class SolarIrradiance:
     A class that contains functions for getting the current solar irradiance.
     Call `print(SolarIrradiance())` to see a list of all methods in the class.
     """
-    # https://toolkit.solcast.com.au/weather-sites/9b40-7248-7d38-b1aa/detail, Resource Id = 9b40-7248-7d38-b1aa
     def __init__(self):
         self.latitude  =  41.046944
         self.longitude = -95.742506
@@ -2510,93 +2260,6 @@ class Git:
 
 
 
-def View(data):
-    """
-    Uses the `traitsui` module to view a dictionary or JSON object,  better version of `view()`.
-
-    Args:
-        `data` (dict/JSON):  The dictionary or JSON object to view.
-    
-    Returns:
-        `None`
-    """
-    from traits.api import HasTraits, Instance, Str, on_trait_change
-    from traitsui.api import View, VGroup, Item, ValueEditor, TextEditor
-    from copy import deepcopy
-
-    class DictEditor(HasTraits):
-        SearchTerm = Str()
-        Object = Instance( object )
-
-        def __init__(self, obj, **traits):
-            super(DictEditor, self).__init__(**traits)
-            self._original_object = obj
-            self.Object = self._filter(obj)
-
-        def trait_view(self, name=None, view_elements=None):
-            return View(
-            VGroup(
-                Item( 'SearchTerm',
-                    label      = 'Search:',
-                    id         = 'search',
-                    editor     = TextEditor(),
-                    # style      = 'custom',
-                    dock       = 'horizontal',
-                    show_label = True
-                ),
-                Item( 'Object',
-                    label      = 'Debug',
-                    id         = 'debug',
-                    editor     = ValueEditor(),
-                    style      = 'custom',
-                    dock       = 'horizontal',
-                    show_label = False
-                ),
-            ),
-            title     = 'Dictionary Editor',
-            width     = 800,
-            height    = 600,
-            resizable = True,
-            )
-
-        @on_trait_change("SearchTerm")
-        def search(self):
-            self.Object = self._filter(self._original_object, self.SearchTerm)
-
-        def _filter(self, object_, search_term=None):
-            def has_matching_leaf(obj):
-                if isinstance(obj, list):
-                    return any(map(has_matching_leaf, obj))
-                if isinstance(obj, dict):
-                    return any(map(has_matching_leaf, obj.values()))
-                else:
-                    try:
-                        if not str(obj) == search_term: return False
-                        return True
-                    except ValueError: False
-
-            obj = deepcopy(object_)
-            if search_term is None: return obj
-
-            if isinstance(obj, dict):
-                for k in obj.keys():
-                    if not has_matching_leaf(obj[k]):
-                        del obj[k]
-                for k in obj.keys():
-                    if isinstance(obj, dict):
-                        obj[k] = self._filter(obj[k], search_term)
-                    elif isinstance(obj, list):
-                        filter(has_matching_leaf,obj[k])
-            return obj
-
-    b = DictEditor(data)
-    b.configure_traits()
-
-
-
-
-
-
 
 
 class Regex:
@@ -2688,54 +2351,6 @@ class Regex:
         return match
 
 
-
-# class Animate:
-#     """
-#     A class that animates a given function.
-#     """
-#     def __init__(self, func, start, end, step=1, delay=0.1, **kwargs):
-#         """
-#         Args:
-#             `func` (function):  The function to animate.
-#             `start` (int):  The start value.
-#             `end` (int):  The end value.
-#             `step` (int):  The step value.
-#             `delay` (float):  The delay between each iteration.
-#             `kwargs` (dict):  The keyword arguments to pass to the function.
-#         """
-#         self.func = func
-#         self.start = start
-#         self.end = end
-#         self.step = step
-#         self.delay = delay
-#         self.kwargs = kwargs
-#         self.current_value = start
-#         self.current_iteration = 0
-#         self.iterations = int((end-start)/step)
-#         self.iterations_done = 0
-
-#     def __call__(self):
-#         """
-#         Calls the function with the current value and the given keyword arguments.
-#         """
-#         self.func(self.current_value, **self.kwargs)
-
-#     def __iter__(self):
-#         """
-#         Iterates over the function.
-#         """
-#         return self
-
-#     def __next__(self):
-#         """
-#         Returns the next value.
-#         """
-#         self.current_iteration += 1
-#         self.current_value += self.step
-#         self.iterations_done += 1
-#         if self.current_iteration > self.iterations:
-#             raise StopIteration
-#         return self.current_value
 
 
 
