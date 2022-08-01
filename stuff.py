@@ -1900,6 +1900,9 @@ class Screen:
         Constructor. Instantiates the screen object for method usage.
         """
         import win32api
+        import pytesseract
+        pytesseract.pytesseract.tesseract_cmd = r'F:\Program Files\Tesseract-OCR\tesseract.exe'
+        self.image_to_text = lambda img: pytesseract.image_to_string(img)
         self.resolution = win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)
         self.middle = self.resolution[0] // 2, self.resolution[1] // 2
         self.top_left = (0, 0)
@@ -1980,9 +1983,10 @@ class Screen:
         Returns:
             `text` (string):  The text from the image.
         """
-        import pytesseract
-        pytesseract.pytesseract.tesseract_cmd = r'F:\Program Files\Tesseract-OCR\tesseract.exe'
-        return pytesseract.image_to_string(img)
+        # import pytesseract
+        # pytesseract.pytesseract.tesseract_cmd = r'F:\Program Files\Tesseract-OCR\tesseract.exe'
+        # return pytesseract.image_to_string(img)
+        return self.image_to_text(img)
     
     def read_chat(self, split_at_colon=True):
         """
@@ -1998,8 +2002,9 @@ class Screen:
         text = self.extract_text(chat).split('\n')
         text = [line.strip().rstrip() for line in text if len(line.strip().rstrip()) > 6]
         if split_at_colon:
-            text = [line.split(':', 1)[1].strip().rstrip() if ':' in line else line for line in text]
+            text = [line.split(':',1)[1].strip().rstrip() if ':' in line else line for line in text]
         return text
+        
 
 
 
