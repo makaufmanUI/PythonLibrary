@@ -1360,11 +1360,11 @@ class System:
         printdashes(25+len(params), endtype='\n\n')
         lpVerb = 'runas'  # causes the UAC elevation prompt.
         procInfo = ShellExecuteEx(
-            nShow=showCmd,
-            fMask=shellcon.SEE_MASK_NOCLOSEPROCESS,
-            lpVerb=lpVerb,
-            lpFile=cmd,
-            lpParameters=params
+            nShow  = showCmd,
+            fMask  = shellcon.SEE_MASK_NOCLOSEPROCESS,
+            lpVerb = lpVerb,
+            lpFile = cmd,
+            lpParameters = params
         )
         procHandle = procInfo['hProcess']
         obj = win32event.WaitForSingleObject(procHandle, win32event.INFINITE)
@@ -1399,13 +1399,13 @@ class System:
         """
         from win32serviceutil import StartService
         running = self.service_running(service)
-        if running: println(f"\nCouldn't start: ({service}) is already running.")
+        if running: println(f"\n>>> Couldn't start: [{service}] is already running.\n")
         else:
             if not self.user_is_admin(): self.run_as_admin()
             StartService(service, self.machine)
             running = self.service_running(service)
-            if running: println(f"\n({service}) started successfully.")
-            else: println(f"\nCouldn't start ({service}).")
+            if running: println(f"\n>>> [{service}] started successfully.\n")
+            else: println(f"\n>>> Couldn't start [{service}].")
     
     def stop_service(self, service):
         """
@@ -1423,9 +1423,9 @@ class System:
             if not self.user_is_admin(): self.run_as_admin()
             StopService(service, self.machine)
             running = self.service_running(service)
-            if running: println(f"\nCouldn't stop ({service}).")
-            else: println(f"\n({service}) stopped successfully.")
-        else: println(f"\nCouldn't stop: ({service}) is not running.")
+            if running: println(f"\n>>> Couldn't stop [{service}].\n")
+            else: println(f"\n>>> [{service}] stopped successfully.\n")
+        else: println(f"\n>>> Couldn't stop: [{service}] is not running.\n")
     
     def restart_service(self, service):
         """
