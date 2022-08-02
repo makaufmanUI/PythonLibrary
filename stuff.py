@@ -1315,7 +1315,7 @@ class System:
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, self.REG_PATH_2, 0, winreg.KEY_READ) as registry_key:
             reg_val3 = winreg.QueryValueEx(registry_key, 'PromptOnSecureDesktop')[0]
             reg_val4 = winreg.QueryValueEx(registry_key, 'ConsentPromptBehaviorAdmin')[0]
-        return True if reg_val1 and reg_val2 and reg_val3 and reg_val4 == 0 else False
+        return True if reg_val1 == 0 and reg_val2 == 0 and reg_val3 == 0 and reg_val4 == 0 else False
     
     def set_privelages(self, level='admin'):
         """
@@ -1327,6 +1327,7 @@ class System:
         import winreg
         if level == 'admin': value = 0
         elif level == 'user': value = 5
+        else: raise ValueError(f"\n>>> {level} is not a valid level.\n")
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, self.REG_PATH_1, 0, winreg.KEY_SET_VALUE) as registry_key:
             winreg.SetValueEx(registry_key, 'PromptOnSecureDesktop', 0, winreg.REG_DWORD, value)
             winreg.SetValueEx(registry_key, 'ConsentPromptBehaviorAdmin', 0, winreg.REG_DWORD, value)
