@@ -1399,12 +1399,12 @@ class System:
         """
         from win32serviceutil import StartService
         running = self.service_running(service)
-        if running: println(f"\n>>> Couldn't start: [{service}] is already running.\n")
+        if running: println(f"\n>>> Couldn't start: [{service}] is already running.")
         else:
             if not self.user_is_admin(): self.run_as_admin()
             StartService(service, self.machine)
             running = self.service_running(service)
-            if running: println(f"\n>>> [{service}] started successfully.\n")
+            if running: println(f"\n>>> [{service}] started successfully.")
             else: println(f"\n>>> Couldn't start [{service}].")
     
     def stop_service(self, service):
@@ -1423,9 +1423,9 @@ class System:
             if not self.user_is_admin(): self.run_as_admin()
             StopService(service, self.machine)
             running = self.service_running(service)
-            if running: println(f"\n>>> Couldn't stop [{service}].\n")
-            else: println(f"\n>>> [{service}] stopped successfully.\n")
-        else: println(f"\n>>> Couldn't stop: [{service}] is not running.\n")
+            if running: println(f"\n>>> Couldn't stop [{service}].")
+            else: println(f"\n>>> [{service}] stopped successfully.")
+        else: println(f"\n>>> Couldn't stop: [{service}] is not running.")
     
     def restart_service(self, service):
         """
